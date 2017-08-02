@@ -2303,6 +2303,8 @@
 
 -(void)attachmentAction
 {
+    [self.view endEditing:YES];
+    
     if(self.isUserBlocked)
     {
         [self showBlockedAlert];
@@ -2391,10 +2393,10 @@
         }]];
     }
     
-        [theController addAction:[UIAlertAction actionWithTitle:@"Share Contact" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            
-            [self openContactsView];
-        }]];
+//        [theController addAction:[UIAlertAction actionWithTitle:@"Share Contact" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+//    
+//            [self openContactsView];
+//        }]];
 
     [theController addAction:[UIAlertAction actionWithTitle:@"Photos/Videos" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         

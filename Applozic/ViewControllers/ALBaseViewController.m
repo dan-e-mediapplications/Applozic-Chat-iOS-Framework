@@ -248,7 +248,7 @@ static CGFloat const sendTextViewCornerRadius = 15.0f;
     [self updateSubViews];
     
     /*  CHECK PRICING PACKAGE */
-    [self checkPricingPackage];
+//    [self checkPricingPackage];
 }
 
 -(void)checkPricingPackage

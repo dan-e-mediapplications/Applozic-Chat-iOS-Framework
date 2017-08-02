@@ -136,18 +136,25 @@
 {
     
     UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"Applozic" bundle:[NSBundle bundleForClass:ALChatViewController.class]];
-    UIViewController *theTabBar = [storyboard instantiateViewControllerWithIdentifier:@"messageTabBar"];
+    UIViewController *theTabBar = [storyboard instantiateViewControllerWithIdentifier:@"ALViewController"];
     
     //              To Lunch with different Animation...
     //theTabBar.modalTransitionStyle=UIModalTransitionStyleCrossDissolve ;
     
-    UITabBarController * tabBAR = ((UITabBarController *)theTabBar);
-    [self setCustomTabBarIcon:tabBAR];
-    UINavigationController * navBAR = (UINavigationController *)[[tabBAR viewControllers] objectAtIndex:0];
-    ALMessagesViewController * msgVC = (ALMessagesViewController *)[[navBAR viewControllers] objectAtIndex:0];
-    msgVC.messagesViewDelegate = self;
+//    UITabBarController * tabBAR = ((UITabBarController *)theTabBar);
+//    [self setCustomTabBarIcon:tabBAR];
+//    UINavigationController * navBAR = (UINavigationController *)[[tabBAR viewControllers] objectAtIndex:0];
+//    ALMessagesViewController * msgVC = [[ALMessagesViewController alloc] init];
+//    msgVC.messagesViewDelegate = self;
+//    
+//    [viewController presentViewController:msgVC animated:YES completion:nil];
     
-    [viewController presentViewController:theTabBar animated:YES completion:nil];
+    
+    
+    
+    UINavigationController * conversationViewNavController = [self createNavigationControllerForVC:theTabBar];
+    conversationViewNavController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [viewController presentViewController:conversationViewNavController animated:YES completion:nil];
     
 }
 
@@ -264,13 +271,13 @@
 
 -(void)setCustomTabBarIcon:(UITabBarController *)tabBAR
 {
-    UITabBarItem *item1 = [tabBAR.tabBar.items objectAtIndex:0];
-    [item1 setTitle:[ALApplozicSettings getChatListTabTitle]];
-    [item1 setImage:[ALApplozicSettings getChatListTabIcon]];
+//    UITabBarItem *item1 = [tabBAR.tabBar.items objectAtIndex:0];
+//    [item1 setTitle:[ALApplozicSettings getChatListTabTitle]];
+//    [item1 setImage:[ALApplozicSettings getChatListTabIcon]];
     
-    UITabBarItem *item2 = [tabBAR.tabBar.items objectAtIndex:1];
-    [item2 setTitle:[ALApplozicSettings getProfileTabTitle]];
-    [item2 setImage:[ALApplozicSettings getProfileTabIcon]];
+//    UITabBarItem *item2 = [tabBAR.tabBar.items objectAtIndex:0];
+//    [item2 setTitle:[ALApplozicSettings getProfileTabTitle]];
+//    [item2 setImage:[ALApplozicSettings getProfileTabIcon]];
 }
 
 @end

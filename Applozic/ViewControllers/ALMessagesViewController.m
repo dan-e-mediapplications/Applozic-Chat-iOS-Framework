@@ -170,6 +170,8 @@
 {
     [super viewWillAppear:animated];
     
+    [self.tabBarController.tabBar setHidden:YES];
+    
     [self dropShadowInNavigationBar];
 
     [self.navigationController.navigationBar addSubview:[ALUtilityClass setStatusBarStyle]];
@@ -915,7 +917,7 @@
 {
     if(indexPath.section == 0)
     {
-        tableView.rowHeight = 40.0;
+        tableView.rowHeight = 60.0;
     }
     else
     {
@@ -1498,7 +1500,7 @@
 -(void)fetchMoreMessages:(UIScrollView*)aScrollView
 {
     [self.mActivityIndicator startAnimating];
-    [self.mTableView setUserInteractionEnabled:NO];
+//    [self.mTableView setUserInteractionEnabled:NO];
     
     if(![ALUserDefaultsHandler getFlagForAllConversationFetched])
     {
