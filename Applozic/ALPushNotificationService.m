@@ -333,6 +333,40 @@
     }
 }
 
+-(void)notificationArrivedToApplication:(UIApplication*)application withDictionary:(NSDictionary *)userInfo status:(UIApplicationState *)status
+{
+    if(status == UIApplicationStateInactive)
+    {
+        /* 
+        # App is transitioning from background to foreground (user taps notification), do what you need when user taps here!
+
+        # SYNC AND PUSH DETAIL VIEW CONTROLLER
+        NSLog(@"APP_STATE_INACTIVE APP_DELEGATE");
+         */
+        [self processPushNotification:userInfo updateUI:[NSNumber numberWithInt:APP_STATE_INACTIVE]];
+    }
+    else if(status == UIApplicationStateActive)
+    {
+        /*
+         # App is currently active, can update badges count here
+
+         # SYNC AND PUSH DETAIL VIEW CONTROLLER
+         NSLog(@"APP_STATE_ACTIVE APP_DELEGATE");
+         */
+        [self processPushNotification:userInfo updateUI:[NSNumber numberWithInt:APP_STATE_ACTIVE]];
+    }
+    else if(status == UIApplicationStateBackground)
+    {
+        /* # App is in background, if content-available key of your notification is set to 1, poll to your backend to retrieve data and update your interface here
+
+        # SYNC ONLY
+        NSLog(@"APP_STATE_BACKGROUND APP_DELEGATE");
+        */
+        [self processPushNotification:userInfo updateUI:[NSNumber numberWithInt:APP_STATE_BACKGROUND]];
+    }
+}
+
+
 +(void)applicationEntersForeground
 {
    [[NSNotificationCenter defaultCenter] postNotificationName:@"appCameInForeground" object:nil];
