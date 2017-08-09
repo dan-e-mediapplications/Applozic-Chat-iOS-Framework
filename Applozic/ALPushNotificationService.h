@@ -56,6 +56,7 @@
 @property(nonatomic,strong) ALChatLauncher * chatLauncher;
 
 -(void)notificationArrivedToApplication:(UIApplication*)application withDictionary:(NSDictionary *)userInfo;
+-(void)notificationArrivedToApplication:(UIApplication*)application withDictionary:(NSDictionary *)userInfo status:(UIApplicationState *)status;
 +(void)applicationEntersForeground;
 +(void)userSync;
 @end
