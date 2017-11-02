@@ -55,7 +55,7 @@
     {
         NSData * thePostData = [paramString dataUsingEncoding:NSUTF8StringEncoding];
         
-        if([ALUserDefaultsHandler getEncryptionKey] && ![urlString hasSuffix:REGISTER_USER_STRING]) // ENCRYPTING DATA WITH KEY
+        if([ALUserDefaultsHandler getEncryptionKey] && ![urlString hasSuffix:REGISTER_USER_STRING] && ![urlString hasSuffix:@"rest/ws/register/update"]) // ENCRYPTING DATA WITH KEY
         {
            NSData *postData = [thePostData AES128EncryptedDataWithKey:[ALUserDefaultsHandler getEncryptionKey]];
            NSData *base64Encoded = [postData base64EncodedDataWithOptions:0];

@@ -57,12 +57,32 @@
        id theJson = nil;
        
        // DECRYPTING DATA WITH KEY
-       if([ALUserDefaultsHandler getEncryptionKey] && ![tag isEqualToString:@"CREATE ACCOUNT"] && ![tag isEqualToString:@"CREATE FILE URL"])
-       {
-           NSData *base64DecodedData = [[NSData alloc] initWithBase64EncodedData:data options:0];
-           NSData *theData = [base64DecodedData AES128DecryptedDataWithKey:[ALUserDefaultsHandler getEncryptionKey]];
-           data = theData;
-       }
+                               // DECRYPTING DATA WITH KEY
+                               if([ALUserDefaultsHandler getEncryptionKey] && ![tag isEqualToString:@"CREATE ACCOUNT"] && ![tag isEqualToString:@"CREATE FILE URL"] && ![tag isEqualToString:@"UPDATE NOTIFICATION MODE"])
+                               {
+                                   
+                                   NSData *base64DecodedData = [[NSData alloc] initWithBase64EncodedData:data options:0];
+                                   NSData *theData = [base64DecodedData AES128DecryptedDataWithKey:[ALUserDefaultsHandler getEncryptionKey]];
+                                   
+                                   if (theData == nil)
+                                   {
+                                       reponseCompletion(nil,[self errorWithDescription:message_SomethingWentWrong]);
+                                       NSLog(@"api error - %@",tag);
+                                       return;
+                                   }
+                                   
+                                   if(theData.bytes){
+                                       
+                                       NSString* dataToString = [NSString stringWithUTF8String:[theData bytes]];
+                                       
+                                       data = [dataToString dataUsingEncoding:NSUTF8StringEncoding];
+                                       
+                                   }else{
+                                       reponseCompletion(nil,[self errorWithDescription:message_SomethingWentWrong]);
+                                       NSLog(@"api error - %@",tag);
+                                       return;
+                                   }
+                               }
                               
         if ([tag isEqualToString:@"CREATE FILE URL"] || [tag isEqualToString:@"IMAGE POSTING"])
         {
