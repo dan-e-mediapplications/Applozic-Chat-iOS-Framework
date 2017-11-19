@@ -25,12 +25,12 @@
 -(void) initWithCompletion:(ALUser *)user withCompletion:(void(^)(ALRegistrationResponse * response, NSError *error)) completion
 {
     NSString * theUrlString = [NSString stringWithFormat:@"%@/rest/ws/register/client",KBASE_URL];
-    
+
     [ALUserDefaultsHandler setUserId:user.userId];
     [ALUserDefaultsHandler setPassword:user.password];
     [ALUserDefaultsHandler setDisplayName:user.displayName];
     [ALUserDefaultsHandler setEmailId:user.email];
-    
+
     [ALUserDefaultsHandler setApplicationKey: user.applicationId];
     [user setPrefContactAPI:2];
     [user setEmailVerified:true];
@@ -43,7 +43,7 @@
     [user setUnreadCountType:[ALUserDefaultsHandler getUnreadCountType]];
     [user setDeviceApnsType:[ALUserDefaultsHandler getDeviceApnsType]];
     [user setEnableEncryption:[ALUserDefaultsHandler getEnableEncryption]];
-    
+
     if([ALUserDefaultsHandler getAppModuleName] != NULL)
     {
         [user setAppModuleName:[ALUserDefaultsHandler getAppModuleName]];
@@ -53,29 +53,29 @@
         [user setFeatures:[NSMutableArray arrayWithArray:AV_FEATURE_ARRAY]];
     }
     [user setUserTypeId:[ALUserDefaultsHandler getUserTypeId]];
-    
+
     //NSString * theParamString = [ALUtilityClass generateJsonStringFromDictionary:userInfo];
     NSError * error;
     NSData * postdata = [NSJSONSerialization dataWithJSONObject:user.dictionary options:0 error:&error];
     NSString *theParamString = [[NSString alloc] initWithData:postdata encoding:NSUTF8StringEncoding];
-    
+
     NSLog(@"PARAM_STRING USER_REGISTRATION :: %@",theParamString);
-    
+
     NSMutableURLRequest * theRequest = [ALRequestHandler createPOSTRequestWithUrlString:theUrlString paramString:theParamString];
-    
+
     [ALResponseHandler processRequest:theRequest andTag:@"CREATE ACCOUNT" WithCompletionHandler:^(id theJson, NSError *theError) {
-        
+
         NSString *statusStr = (NSString *)theJson;
         NSLog(@"RESPONSE_USER_REGISTRATION :: %@", statusStr);
-        
+
         if (theError)
         {
             completion(nil, theError);
             return;
         }
-        
+
         ALRegistrationResponse *response = [[ALRegistrationResponse alloc] initWithJSONString:statusStr];
-        
+
         //Todo: figure out how to set country code
         //mobiComUserPreference.setCountryCode(user.getCountryCode());
         //mobiComUserPreference.setContactNumber(user.getContactNumber());
@@ -88,7 +88,7 @@
             [ALUserDefaultsHandler setDeviceKeyString:response.deviceKey];
             [ALUserDefaultsHandler setUserKeyString:response.userKey];
             [ALUserDefaultsHandler setUserPricingPackage:response.pricingPackage];
-            
+
             if( response.notificationSoundFileName )
             {
                 [ALUserDefaultsHandler setNotificationSoundFileName:response.notificationSoundFileName];
@@ -112,7 +112,7 @@
             {
                 [ALUserDefaultsHandler setEncryptionKey:response.encryptionKey];
             }
-            
+
             ALContactDBService  * alContactDBService = [[ALContactDBService alloc] init];
             ALContact *contact = [[ALContact alloc] init];
             contact.userId = user.userId;
@@ -120,22 +120,22 @@
             contact.contactImageUrl = response.imageLink;
             contact.contactNumber  = response.contactNumber;
             [alContactDBService addContact:contact];
-            
+
             //[ALUserDefaultsHandler setLastSyncTime:(NSNumber *)response.lastSyncTime];
         }
-        
+
         @catch (NSException *exception)
         {
             NSLog(@"EXCEPTION :: %@", exception.description);
         }
-        
+
         @finally
         {
             NSLog(@"..");
         }
-        
+
         completion(response,nil);
-        
+
         [ALUserDefaultsHandler setLastSyncTime:[NSNumber numberWithDouble:[response.currentTimeStamp doubleValue]]];
         [ALUserDefaultsHandler setLastSyncChannelTime:(NSNumber *)response.currentTimeStamp];
         [self connect];
@@ -144,13 +144,13 @@
         {
             [ALMessageService processLatestMessagesGroupByContact];
         }
-        
+
     }];
-    
+
     ALUserService * alUserService = [ALUserService new];
     [alUserService updateUserApplicationInfo];
-    
-    
+
+
 }
 
 
@@ -168,16 +168,16 @@
         [user setDisplayName:[ALUserDefaultsHandler getDisplayName]];
         [user setEmail:[ALUserDefaultsHandler getEmailId]];
         [self initWithCompletion:user withCompletion: completion];
-        
+
     }
 }
 
 +(void) updateNotificationMode:(short)notificationMode withCompletion:(void(^)(ALRegistrationResponse * response, NSError *error)) completion
 {
     NSString * theUrlString = [NSString stringWithFormat:@"%@/rest/ws/register/update",KBASE_URL];
-    
+
     ALUser * user = [ALUser new];
-    
+
     [user setUserId:[ALUserDefaultsHandler getUserId]];
     [user setApplicationId:[ALUserDefaultsHandler getApplicationKey]];
     [user setNotificationMode:notificationMode];
@@ -190,28 +190,28 @@
     [user setDeviceApnsType:[ALUserDefaultsHandler getDeviceApnsType]];
     [user setAppVersionCode: VERSION_CODE];
     [user setAuthenticationTypeId:[ALUserDefaultsHandler getUserAuthenticationTypeId]];
-    
+
     if([ALUserDefaultsHandler getAppModuleName] != NULL){
         [user setAppModuleName:[ALUserDefaultsHandler getAppModuleName]];
     }
-    
+
     if([ALUserDefaultsHandler getNotificationSoundFileName] != nil){
         [user setNotificationSoundFileName:[ALUserDefaultsHandler getNotificationSoundFileName]];
     }
-    
+
     [user setUserTypeId:[ALUserDefaultsHandler getUserTypeId]];
-    
+
     [user setUnreadCountType:[ALUserDefaultsHandler getUnreadCountType]];
-    
+
     NSError * error;
     NSData * postdata = [NSJSONSerialization dataWithJSONObject:user.dictionary options:0 error:&error];
     NSString *theParamString = [[NSString alloc] initWithData:postdata encoding:NSUTF8StringEncoding];
-    
+
     NSMutableURLRequest * theRequest = [ALRequestHandler createPOSTRequestWithUrlString:theUrlString paramString:theParamString];
-    
+
     [ALResponseHandler processRequest:theRequest andTag:@"UPDATE NOTIFICATION MODE" WithCompletionHandler:^(id theJson, NSError *theError) {
         NSLog(@"Updating Notification Mode Server Response Received %@", theJson);
-        
+
         NSString *statusStr = (NSString *)theJson;
         if (theError) {
             completion(nil,theError);
@@ -219,21 +219,21 @@
         }
         ALRegistrationResponse *response = [[ALRegistrationResponse alloc] initWithJSONString:statusStr];
         completion(response,nil);
-        
+
     }];
-    
+
 }
 
 -(void) connect {
-    
+
     //[[ALMQTTService sharedInstance] connectToApplozic];
 }
 
 -(void) disconnect {
-    
+
     // ALMQTTConversationService *ob  = [[ALMQTTConversationService alloc] init];
     //[ob sendTypingStatus:[ALUserDefaultsHandler getApplicationKey] userID:[ALUserDefaultsHandler getUserId] typing:NO];
-    
+
     //  [[ALMQTTConversationService sharedInstance] unsubscribeToConversation];
 }
 
@@ -241,33 +241,33 @@
 {
     NSString *urlString = [NSString stringWithFormat:@"%@%@",KBASE_URL,LOGOUT_URL];
     NSMutableURLRequest * request = [ALRequestHandler createPOSTRequestWithUrlString:urlString paramString:nil];
-    
-    [ALResponseHandler processRequest:request andTag:@"USER_LOGOUT" WithCompletionHandler:^(id theJson, NSError *error) {
-        
-        NSLog(@"RESPONSE_USER_LOGOUT :: %@", (NSString *)theJson);
-        ALAPIResponse *response = [[ALAPIResponse alloc] initWithJSONString:theJson];
-        if(!error && [response.status isEqualToString:@"success"])
-        {
-            NSString *userKey = [ALUserDefaultsHandler getUserKeyString];
-            //            [[UIApplication sharedApplication] unregisterForRemoteNotifications];
-            [ALUserDefaultsHandler clearAll];
-            ALMessageDBService *messageDBService = [[ALMessageDBService alloc] init];
-            [messageDBService deleteAllObjectsInCoreData];
-            
-            [[ALMQTTConversationService sharedInstance] unsubscribeToConversation: userKey];
-        }
-        
-        completion(response,error);
-    }];
+
+//    [ALResponseHandler processRequest:request andTag:@"USER_LOGOUT" WithCompletionHandler:^(id theJson, NSError *error) {
+//
+//        NSLog(@"RESPONSE_USER_LOGOUT :: %@", (NSString *)theJson);
+//        ALAPIResponse *response = [[ALAPIResponse alloc] initWithJSONString:theJson];
+//        if(!error && [response.status isEqualToString:@"success"])
+//        {
+    NSString *userKey = [ALUserDefaultsHandler getUserKeyString];
+    //            [[UIApplication sharedApplication] unregisterForRemoteNotifications];
+    [ALUserDefaultsHandler clearAll];
+    ALMessageDBService *messageDBService = [[ALMessageDBService alloc] init];
+    [messageDBService deleteAllObjectsInCoreData];
+
+    [[ALMQTTConversationService sharedInstance] unsubscribeToConversation: userKey];
+//        }
+//
+//        completion(response,error);
+//    }];
 }
 
 +(BOOL)isAppUpdated{
-    
+
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
+
     NSString *currentAppVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *previousVersion = [defaults objectForKey:@"appVersion"];
-    
+
     if (!previousVersion) {
         NSLog(@"First start after installing the app");
         [defaults setObject:currentAppVersion forKey:@"appVersion"];
@@ -279,17 +279,17 @@
     }
     else {
         NSLog(@"App was updated since last run");
-        
+
         [ALRegisterUserClientService sendServerRequestForAppUpdate];
         [defaults setObject:currentAppVersion forKey:@"appVersion"];
         [defaults synchronize];
         return YES;
     }
-    
+
 }
 
 +(void)sendServerRequestForAppUpdate{
-    
+
     NSString * theUrlString = [NSString stringWithFormat:@"%@/rest/ws/register/version/update",KBASE_URL];
     NSString * paramString = [NSString stringWithFormat:@"?appVersionCode=%@&deviceKey%@",VERSION_CODE,DEVICE_KEY_STRING];
     NSMutableURLRequest * theRequest = [ALRequestHandler createGETRequestWithUrlString:theUrlString paramString:paramString];
@@ -299,8 +299,8 @@
         }
         NSLog(@"Response: APP UPDATED:%@",theJson);
     }];
-    
-    
+
+
 }
 
 -(void)syncAccountStatus
@@ -309,7 +309,7 @@
     NSString * paramString = [NSString stringWithFormat:@"applicationId=%@", [ALUserDefaultsHandler getApplicationKey]];
     NSMutableURLRequest * theRequest = [ALRequestHandler createGETRequestWithUrlString:theUrlString paramString:paramString];
     [ALResponseHandler processRequest:theRequest andTag:@"SYNC_ACCOUNT_STATUS" WithCompletionHandler:^(id theJson, NSError *theError) {
-        
+
         if (theError)
         {
             NSLog(@"ERROR_SYNC_ACCOUNT_STATUS :: %@", theError.description);
