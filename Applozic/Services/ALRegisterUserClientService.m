@@ -242,23 +242,23 @@
     NSString *urlString = [NSString stringWithFormat:@"%@%@",KBASE_URL,LOGOUT_URL];
     NSMutableURLRequest * request = [ALRequestHandler createPOSTRequestWithUrlString:urlString paramString:nil];
 
-//    [ALResponseHandler processRequest:request andTag:@"USER_LOGOUT" WithCompletionHandler:^(id theJson, NSError *error) {
+    [ALResponseHandler processRequest:request andTag:@"USER_LOGOUT" WithCompletionHandler:^(id theJson, NSError *error) {
 //
 //        NSLog(@"RESPONSE_USER_LOGOUT :: %@", (NSString *)theJson);
 //        ALAPIResponse *response = [[ALAPIResponse alloc] initWithJSONString:theJson];
 //        if(!error && [response.status isEqualToString:@"success"])
 //        {
-    NSString *userKey = [ALUserDefaultsHandler getUserKeyString];
-    //            [[UIApplication sharedApplication] unregisterForRemoteNotifications];
-    [ALUserDefaultsHandler clearAll];
-    ALMessageDBService *messageDBService = [[ALMessageDBService alloc] init];
-    [messageDBService deleteAllObjectsInCoreData];
+        NSString *userKey = [ALUserDefaultsHandler getUserKeyString];
+        //            [[UIApplication sharedApplication] unregisterForRemoteNotifications];
+        [ALUserDefaultsHandler clearAll];
+        ALMessageDBService *messageDBService = [[ALMessageDBService alloc] init];
+        [messageDBService deleteAllObjectsInCoreData];
 
-    [[ALMQTTConversationService sharedInstance] unsubscribeToConversation: userKey];
+        [[ALMQTTConversationService sharedInstance] unsubscribeToConversation: userKey];
 //        }
 //
-//        completion(response,error);
-//    }];
+        completion(nil,error);
+    }];
 }
 
 +(BOOL)isAppUpdated{
