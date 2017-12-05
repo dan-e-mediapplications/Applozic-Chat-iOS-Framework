@@ -257,7 +257,8 @@
 -(NSString*)formatLocationJson:(ALMessage *)locationAlMessage
 {
     NSError *error;
-    NSData *objectData = [locationAlMessage.message dataUsingEncoding:NSUTF8StringEncoding];
+    NSString* message = [[[locationAlMessage.message stringByReplacingOccurrencesOfString:@"\n" withString:@""] stringByReplacingOccurrencesOfString:@"\t" withString:@""] stringByReplacingOccurrencesOfString:@"\0" withString:@""];
+    NSData *objectData = [message dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *jsonStringDic = [NSJSONSerialization JSONObjectWithData:objectData
                                                                   options:NSJSONReadingMutableContainers
                                                                     error:&error];
