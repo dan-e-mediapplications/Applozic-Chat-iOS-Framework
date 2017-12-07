@@ -165,7 +165,7 @@
                     content.title = @"";
                     content.body = alertString;
                     content.userInfo = [userInfo mutableCopy];
-                    center.delegate = self;
+                    center.delegate = [[UIApplication sharedApplication] delegate];
                 }
             
                 count = 0;
