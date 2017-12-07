@@ -41,4 +41,6 @@
 
 -(void)invalidateCallNotifying;
 
+-(void)didReceiveLocalNotification:(NSDictionary *)userInfo;
+
 @end
