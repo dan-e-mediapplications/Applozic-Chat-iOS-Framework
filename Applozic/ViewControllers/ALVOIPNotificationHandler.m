@@ -169,11 +169,11 @@
                 }
             
                 count = 0;
-                apnTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
+                [apnTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
                                                            target:self
                                                          selector:@selector(showIncomingCall:)
                                                          userInfo:userInfo
-                                                          repeats:YES];
+                                                          repeats:YES] fire];
                 
                 self.backgroundTask = [appObject beginBackgroundTaskWithExpirationHandler:^{
                     NSLog(@"ALVOIP : BACKGROUND_HANDLER_NO_MORE_TASK_RUNNING.");
